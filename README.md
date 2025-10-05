@@ -5,6 +5,7 @@
 ## ORB_BF Approach
 
 - **Data_Check Accuracy**: 80.00% (16/20)
+- **Data_Check Avg Time**: 0.0159s (±0.0277s)
 
 ### Confusion Matrix (Data_Check)
 ![Confusion Matrix ORB_BF](results/confusion_matrix_orb_bf.png)
@@ -43,6 +44,7 @@ Looking at the results per match, we see that the fingerprints that are clearly 
 ## SIFT_FLANN Approach
 
 - **Data_Check Accuracy**: 85.00% (17/20)
+- **Data_Check Avg Time**: 0.0597s (±0.0027s)
 
 ### Confusion Matrix (Data_Check)
 ![Confusion Matrix SIFT_FLANN](results/confusion_matrix_sift_flann.png)
@@ -50,7 +52,7 @@ Looking at the results per match, we see that the fingerprints that are clearly 
 ### Match Counts Plot (Data_Check)
 ![Match Counts SIFT_FLANN](results/match_counts_sift_flann.png)
 
-SIFT_FLANN seems to generally find more matches. But not as many more on same matches as on different matches.
+SIFT_FLANN seems to generally find more matches. But not as many relatively on same matches as on different matches. This hints to it finding more incorrect good matches.
 
 ### Per-Pair Results (Data_Check)
 | Folder | Expected | Predicted | Good Matches | Visualization |
@@ -76,13 +78,15 @@ SIFT_FLANN seems to generally find more matches. But not as many more on same ma
 | same_8 | Match | Match | 82 | ![Match](results/same_8_sift_flann_match.png) |
 | same_9 | Match | No Match | 19 | ![Match](results/same_9_sift_flann_no_match.png) |
 
-Looking at the results per match, we see that it finds more incorrect good matches.
+Looking at the results per match, we see that it does indeed find more incorrect good matches.
 
 ## UIA Matching
 
 ### ORB_BF Approach
 
-- **Good Matches**: 1/20
+- **Predicted**: No Match
+- **Good Matches**: 1
+- **Time**: 0.0250s
 
 ![UIA Match](results/UIA_orb_bf_no_match.png)
 
@@ -90,9 +94,20 @@ ORB_BF finds next to no matches, and the found match is incorrect. This makes se
 
 ## SIFT_FLANN Approach
 
-- **Good Matches**: 13/20
+- **Predicted**: No Match
+- **Good Matches**: 13
+- **Time**: 0.2466s
 
 ![UIA Match](results/UIA_sift_flann_no_match.png)
 
 SIFT_FLANN finds more good matches, but none of them are correct still. This fits the previous trend of false positives with SIFT_FLANN.
 
+## Comparing efficiency
+
+### Time
+
+For all images ORB_BF is markedly faster.
+
+### Accuracy
+
+SIFT_FLANN seems to find more good matches, but more of its matches are incorrect. It is hard to decide what is better for most uses, but for this i would say less false positive/negatives is better. Meaning ORB_BF is better.
