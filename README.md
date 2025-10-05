@@ -2,6 +2,20 @@
 
 **Threshold Used**: 20
 
+## Comparing efficiency
+
+### Time
+
+For all images ORB_BF is markedly faster.
+
+### Accuracy
+
+SIFT_FLANN seems to find more good matches, but more of its matches are incorrect. It is hard to decide what is better for most uses, but for this i would say less false positive/negatives is better. Meaning ORB_BF is better.
+
+### Resources
+
+Didnt realise what this meant until now PLACEHOLDER -
+
 ## ORB_BF Approach
 
 - **Data_Check Accuracy**: 80.00% (16/20)
@@ -18,26 +32,26 @@ ORB_BF often has quite few good matches on most different fingerprints, and a lo
 ### Per-Pair Results (Data_Check)
 | Folder | Expected | Predicted | Good Matches | Visualization |
 |--------|----------|-----------|--------------|---------------|
-| different_1 | No Match | No Match | 6 | ![Match](results/different_1_orb_bf_no_match.png) |
-| different_10 | No Match | No Match | 19 | ![Match](results/different_10_orb_bf_no_match.png) |
-| different_2 | No Match | No Match | 1 | ![Match](results/different_2_orb_bf_no_match.png) |
-| different_3 | No Match | No Match | 3 | ![Match](results/different_3_orb_bf_no_match.png) |
-| different_4 | No Match | No Match | 7 | ![Match](results/different_4_orb_bf_no_match.png) |
-| different_5 | No Match | No Match | 1 | ![Match](results/different_5_orb_bf_no_match.png) |
-| different_6 | No Match | No Match | 2 | ![Match](results/different_6_orb_bf_no_match.png) |
-| different_7 | No Match | No Match | 1 | ![Match](results/different_7_orb_bf_no_match.png) |
-| different_8 | No Match | No Match | 14 | ![Match](results/different_8_orb_bf_no_match.png) |
-| different_9 | No Match | No Match | 10 | ![Match](results/different_9_orb_bf_no_match.png) |
-| same_1 | Match | Match | 43 | ![Match](results/same_1_orb_bf_match.png) |
-| same_10 | Match | Match | 34 | ![Match](results/same_10_orb_bf_match.png) |
-| same_2 | Match | No Match | 18 | ![Match](results/same_2_orb_bf_no_match.png) |
-| same_3 | Match | No Match | 5 | ![Match](results/same_3_orb_bf_no_match.png) |
-| same_4 | Match | No Match | 9 | ![Match](results/same_4_orb_bf_no_match.png) |
-| same_5 | Match | Match | 47 | ![Match](results/same_5_orb_bf_match.png) |
-| same_6 | Match | Match | 23 | ![Match](results/same_6_orb_bf_match.png) |
-| same_7 | Match | Match | 29 | ![Match](results/same_7_orb_bf_match.png) |
-| same_8 | Match | Match | 53 | ![Match](results/same_8_orb_bf_match.png) |
-| same_9 | Match | No Match | 16 | ![Match](results/same_9_orb_bf_no_match.png) |
+| different_1 | No Match | No Match | 6 | <img src="different_1_orb_bf_no_match.png" width="200"> |
+| different_10 | No Match | No Match | 19 | <img src="different_10_orb_bf_no_match.png" width="200"> |
+| different_2 | No Match | No Match | 1 | <img src="different_2_orb_bf_no_match.png" width="200"> |
+| different_3 | No Match | No Match | 3 | <img src="different_3_orb_bf_no_match.png" width="200"> |
+| different_4 | No Match | No Match | 7 | <img src="different_4_orb_bf_no_match.png" width="200"> |
+| different_5 | No Match | No Match | 1 | <img src="different_5_orb_bf_no_match.png" width="200"> |
+| different_6 | No Match | No Match | 2 | <img src="different_6_orb_bf_no_match.png" width="200"> |
+| different_7 | No Match | No Match | 1 | <img src="different_7_orb_bf_no_match.png" width="200"> |
+| different_8 | No Match | No Match | 14 | <img src="different_8_orb_bf_no_match.png" width="200"> |
+| different_9 | No Match | No Match | 10 | <img src="different_9_orb_bf_no_match.png" width="200"> |
+| same_1 | Match | Match | 43 | <img src="same_1_orb_bf_match.png" width="200"> |
+| same_10 | Match | Match | 34 | <img src="same_10_orb_bf_match.png" width="200"> |
+| same_2 | Match | No Match | 18 | <img src="same_2_orb_bf_no_match.png" width="200"> |
+| same_3 | Match | No Match | 5 | <img src="same_3_orb_bf_no_match.png" width="200"> |
+| same_4 | Match | No Match | 9 | <img src="same_4_orb_bf_no_match.png" width="200"> |
+| same_5 | Match | Match | 47 | <img src="same_5_orb_bf_match.png" width="200"> |
+| same_6 | Match | Match | 23 | <img src="same_6_orb_bf_match.png" width="200"> |
+| same_7 | Match | Match | 29 | <img src="same_7_orb_bf_match.png" width="200"> |
+| same_8 | Match | Match | 53 | <img src="same_8_orb_bf_match.png" width="200"> |
+| same_9 | Match | No Match | 16 | <img src="same_9_orb_bf_no_match.png" width="200"> |
 
 Looking at the results per match, we see that the fingerprints that are clearly different or clearly the same, have this reflected in good matches, but the more difficult to compare images are unsure, this makes sense. Changing the threshold either way would create more false positives or false negatives.
 
@@ -57,26 +71,26 @@ SIFT_FLANN seems to generally find more matches. But not as many relatively on s
 ### Per-Pair Results (Data_Check)
 | Folder | Expected | Predicted | Good Matches | Visualization |
 |--------|----------|-----------|--------------|---------------|
-| different_1 | No Match | No Match | 9 | ![Match](results/different_1_sift_flann_no_match.png) |
-| different_10 | No Match | No Match | 6 | ![Match](results/different_10_sift_flann_no_match.png) |
-| different_2 | No Match | No Match | 5 | ![Match](results/different_2_sift_flann_no_match.png) |
-| different_3 | No Match | No Match | 7 | ![Match](results/different_3_sift_flann_no_match.png) |
-| different_4 | No Match | No Match | 12 | ![Match](results/different_4_sift_flann_no_match.png) |
-| different_5 | No Match | No Match | 5 | ![Match](results/different_5_sift_flann_no_match.png) |
-| different_6 | No Match | No Match | 11 | ![Match](results/different_6_sift_flann_no_match.png) |
-| different_7 | No Match | No Match | 11 | ![Match](results/different_7_sift_flann_no_match.png) |
-| different_8 | No Match | No Match | 6 | ![Match](results/different_8_sift_flann_no_match.png) |
-| different_9 | No Match | No Match | 18 | ![Match](results/different_9_sift_flann_no_match.png) |
-| same_1 | Match | Match | 57 | ![Match](results/same_1_sift_flann_match.png) |
-| same_10 | Match | Match | 50 | ![Match](results/same_10_sift_flann_match.png) |
-| same_2 | Match | Match | 41 | ![Match](results/same_2_sift_flann_match.png) |
-| same_3 | Match | No Match | 12 | ![Match](results/same_3_sift_flann_no_match.png) |
-| same_4 | Match | Match | 21 | ![Match](results/same_4_sift_flann_match.png) |
-| same_5 | Match | Match | 36 | ![Match](results/same_5_sift_flann_match.png) |
-| same_6 | Match | No Match | 8 | ![Match](results/same_6_sift_flann_no_match.png) |
-| same_7 | Match | Match | 30 | ![Match](results/same_7_sift_flann_match.png) |
-| same_8 | Match | Match | 82 | ![Match](results/same_8_sift_flann_match.png) |
-| same_9 | Match | No Match | 19 | ![Match](results/same_9_sift_flann_no_match.png) |
+| different_1 | No Match | No Match | 9 | <img src="different_1_sift_flann_no_match.png" width="200"> |
+| different_10 | No Match | No Match | 6 | <img src="different_10_sift_flann_no_match.png" width="200"> |
+| different_2 | No Match | No Match | 5 | <img src="different_2_sift_flann_no_match.png" width="200"> |
+| different_3 | No Match | No Match | 7 | <img src="different_3_sift_flann_no_match.png" width="200"> |
+| different_4 | No Match | No Match | 12 | <img src="different_4_sift_flann_no_match.png" width="200"> |
+| different_5 | No Match | No Match | 5 | <img src="different_5_sift_flann_no_match.png" width="200"> |
+| different_6 | No Match | No Match | 11 | <img src="different_6_sift_flann_no_match.png" width="200"> |
+| different_7 | No Match | No Match | 11 | <img src="different_7_sift_flann_no_match.png" width="200"> |
+| different_8 | No Match | No Match | 6 | <img src="different_8_sift_flann_no_match.png" width="200"> |
+| different_9 | No Match | No Match | 18 | <img src="different_9_sift_flann_no_match.png" width="200"> |
+| same_1 | Match | Match | 57 | <img src="same_1_sift_flann_match.png" width="200"> |
+| same_10 | Match | Match | 50 | <img src="same_10_sift_flann_match.png" width="200"> |
+| same_2 | Match | Match | 41 | <img src="same_2_sift_flann_match.png" width="200"> |
+| same_3 | Match | No Match | 12 | <img src="same_3_sift_flann_no_match.png" width="200"> |
+| same_4 | Match | Match | 21 | <img src="same_4_sift_flann_match.png" width="200"> |
+| same_5 | Match | Match | 36 | <img src="same_5_sift_flann_match.png" width="200"> |
+| same_6 | Match | No Match | 8 | <img src="same_6_sift_flann_no_match.png" width="200"> |
+| same_7 | Match | Match | 30 | <img src="same_7_sift_flann_match.png" width="200"> |
+| same_8 | Match | Match | 82 | <img src="same_8_sift_flann_match.png" width="200"> |
+| same_9 | Match | No Match | 19 | <img src="same_9_sift_flann_no_match.png" width="200"> |
 
 Looking at the results per match, we see that it does indeed find more incorrect good matches.
 
@@ -102,12 +116,3 @@ ORB_BF finds next to no matches, and the found match is incorrect. This makes se
 
 SIFT_FLANN finds more good matches, but none of them are correct still. This fits the previous trend of false positives with SIFT_FLANN.
 
-## Comparing efficiency
-
-### Time
-
-For all images ORB_BF is markedly faster.
-
-### Accuracy
-
-SIFT_FLANN seems to find more good matches, but more of its matches are incorrect. It is hard to decide what is better for most uses, but for this i would say less false positive/negatives is better. Meaning ORB_BF is better.
