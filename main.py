@@ -295,7 +295,7 @@ def generate_markdown_report(results_folder, dataset_results, uia_results, appro
                     expected = "Match" if "same" in folder.lower() else "No Match"
                     predicted = "Match" if count > threshold else "No Match"
                     img_file = f"{folder}_{approach}_{'match' if predicted == 'Match' else 'no_match'}.png"
-                    f.write(f"| {folder} | {expected} | {predicted} | {count} | <img src=\"{img_file}\" width=\"200\"> |\n")
+                    f.write(f"| {folder} | {expected} | {predicted} | {count} | <img src=\"results/{img_file}\" width=\"200\"> |\n")
                 f.write("\n")
 
             if uia_results and approach in uia_results:
