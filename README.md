@@ -14,12 +14,14 @@ SIFT_FLANN seems to find more good matches, but more of its matches are incorrec
 
 ### Resources
 
-Didnt realise what this meant until now PLACEHOLDER -
+ORB_BF seems much more memory efficient, when there are few matches, but usese more and more memory as the amount of matches grows.
 
 ## ORB_BF Approach
 
+
 - **Data_Check Accuracy**: 80.00% (16/20)
 - **Data_Check Avg Time**: 0.0159s (±0.0277s)
+- **Data_Check Avg Memory**: 4380.20KB
 
 ### Confusion Matrix (Data_Check)
 ![Confusion Matrix ORB_BF](results/confusion_matrix_orb_bf.png)
@@ -57,8 +59,10 @@ Looking at the results per match, we see that the fingerprints that are clearly 
 
 ## SIFT_FLANN Approach
 
+
 - **Data_Check Accuracy**: 85.00% (17/20)
-- **Data_Check Avg Time**: 0.0597s (±0.0027s)
+- **Data_Check Avg Time**: 0.0601s (±0.0025s)
+- **Data_Check Avg Memory**: 3032.60KB
 
 ### Confusion Matrix (Data_Check)
 ![Confusion Matrix SIFT_FLANN](results/confusion_matrix_sift_flann.png)
@@ -100,7 +104,8 @@ Looking at the results per match, we see that it does indeed find more incorrect
 
 - **Predicted**: No Match
 - **Good Matches**: 1
-- **Time**: 0.0250s
+- **Time**: 0.0235s
+- **Memory**: 468.00KB
 
 ![UIA Match](results/UIA_orb_bf_no_match.png)
 
@@ -110,7 +115,8 @@ ORB_BF finds next to no matches, and the found match is incorrect. This makes se
 
 - **Predicted**: No Match
 - **Good Matches**: 13
-- **Time**: 0.2466s
+- **Time**: 0.2481s
+- **Memory**: 4228.00KB
 
 ![UIA Match](results/UIA_sift_flann_no_match.png)
 

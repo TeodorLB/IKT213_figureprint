@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import time
+import psutil # Memory usage check
 
 def match_orb_bf(img1_path, img2_path, is_fingerprint=True, display_inline=False, verbose=True):
     if verbose:
@@ -16,6 +17,8 @@ def match_orb_bf(img1_path, img2_path, is_fingerprint=True, display_inline=False
             print("WARNING: Error loading images.")
         return "Error", 0, None, 0.0
 
+    process = psutil.Process()
+    memory_before = process.memory_info().rss / (1024) # in KB
     start_time = time.time()
 
     if is_fingerprint:
@@ -37,7 +40,8 @@ def match_orb_bf(img1_path, img2_path, is_fingerprint=True, display_inline=False
         if verbose:
             print("WARNING: No descriptors found in one of the images.")
         duration = time.time() - start_time
-        return "No Match", 0, None, duration
+        memory_used = (process.memory_info().rss / 1024) - memory_before
+        return "No Match", 0, None, duration, memory_used
 
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=False)
     matches = bf.knnMatch(des1, des2, k=2)
@@ -46,6 +50,7 @@ def match_orb_bf(img1_path, img2_path, is_fingerprint=True, display_inline=False
     good_matches = [m for m, n in matches if m.distance < 0.7 * n.distance]
 
     duration = time.time() - start_time # End core timing before visualisation
+    memory_used = (process.memory_info().rss / 1024) - memory_before
 
     # Visualize: Draw matches
     match_img = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS, singlePointColor=(0,255,0), matchColor=(255,0,0))
@@ -61,11 +66,11 @@ def match_orb_bf(img1_path, img2_path, is_fingerprint=True, display_inline=False
     if len(good_matches) > threshold:
         if verbose:
             print(f"Result: Match (good matches: {len(good_matches)} > {threshold})")
-        return "Match", len(good_matches), match_img, duration
+        return "Match", len(good_matches), match_img, duration, memory_used
     else:
         if verbose:
             print(f"Result: No Match (good matches: {len(good_matches)} <= {threshold})")
-        return "No Match", len(good_matches), match_img, duration
+        return "No Match", len(good_matches), match_img, duration, memory_used
 
 
 def match_sift_flann(img1_path, img2_path, is_fingerprint=True, display_inline=False, verbose=True):
@@ -79,6 +84,8 @@ def match_sift_flann(img1_path, img2_path, is_fingerprint=True, display_inline=F
             print(f"WARNING: Error loading images.")
         return "Error", 0, None, 0.0
 
+    process = psutil.Process()
+    memory_before = process.memory_info().rss / (1024) # in KB
     start_time = time.time()
 
     if is_fingerprint:
@@ -99,7 +106,8 @@ def match_sift_flann(img1_path, img2_path, is_fingerprint=True, display_inline=F
         if verbose:
             print("WARNING: No descriptors found in one of the images.")
         duration = time.time() - start_time
-        return "No Match", 0, None, duration
+        memory_used = (process.memory_info().rss / 1024) - memory_before
+        return "No Match", 0, None, duration, memory_used
     
     # FLANN parameters
     index_params = dict(algorithm=1, trees=5) # Using KDTree
@@ -111,6 +119,7 @@ def match_sift_flann(img1_path, img2_path, is_fingerprint=True, display_inline=F
     good_matches = [m for m, n in matches if m.distance < 0.7 * n.distance]
 
     duration = time.time() - start_time # End core timing before visualisation
+    memory_used = (process.memory_info().rss / 1024) - memory_before
 
     match_img = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS, singlePointColor=(0,255,0), matchColor=(255,0,0))
 
@@ -125,16 +134,16 @@ def match_sift_flann(img1_path, img2_path, is_fingerprint=True, display_inline=F
     if len(good_matches) > threshold:
         if verbose:
             print(f"Result: Match (good matches: {len(good_matches)} > {threshold})")
-        return "Match", len(good_matches), match_img, duration
+        return "Match", len(good_matches), match_img, duration, memory_used
     else:
         if verbose:
             print(f"Result: No Match (good matches: {len(good_matches)} <= {threshold})")
-        return "No Match", len(good_matches), match_img, duration
+        return "No Match", len(good_matches), match_img, duration, memory_used
 
 
 def process_dataset(dataset_root='./data_check/', approaches=['orb_bf', 'sift_flann'], display_inline=False, results_folder='./results/', verbose=True):
     os.makedirs(results_folder, exist_ok=True)
-    results = {approach: {'correct': 0, 'total': 0, 'y_true': [], 'y_pred': [], 'match_counts': {}, 'durations': []} for approach in approaches}
+    results = {approach: {'correct': 0, 'total': 0, 'y_true': [], 'y_pred': [], 'match_counts': {}, 'durations': [], 'memory_used': []} for approach in approaches}
 
     for folder_type in ['same', 'different']:
         for i in range(1, 11):
@@ -161,9 +170,9 @@ def process_dataset(dataset_root='./data_check/', approaches=['orb_bf', 'sift_fl
 
             for approach in approaches:
                 if approach == 'orb_bf':
-                    result, count, match_img, duration = match_orb_bf(img1_path, img2_path, is_fingerprint=True, display_inline=display_inline, verbose=verbose)
+                    result, count, match_img, duration, memory_used = match_orb_bf(img1_path, img2_path, is_fingerprint=True, display_inline=display_inline, verbose=verbose)
                 elif approach == 'sift_flann':
-                    result, count, match_img, duration = match_sift_flann(img1_path, img2_path, is_fingerprint=True, display_inline=display_inline, verbose=verbose)
+                    result, count, match_img, duration, memory_used = match_sift_flann(img1_path, img2_path, is_fingerprint=True, display_inline=display_inline, verbose=verbose)
                 
                 predicted_label = 1 if result == "Match" else 0
                 if result == expected:
@@ -173,6 +182,10 @@ def process_dataset(dataset_root='./data_check/', approaches=['orb_bf', 'sift_fl
                 results[approach]['y_pred'].append(predicted_label)
                 results[approach]['match_counts'][folder] = count
                 results[approach]['durations'].append(duration)
+                results[approach]['memory_used'].append(memory_used)
+
+                if verbose:
+                    print(f"DEBUG: {approach} for {folder}: Memory Used = {memory_used:.2f}KB")
                 
                 # Save match image
                 if match_img is not None:
@@ -187,7 +200,9 @@ def process_dataset(dataset_root='./data_check/', approaches=['orb_bf', 'sift_fl
             accuracy = (results[approach]['correct'] / results[approach]['total']) * 100 if results[approach]['total'] > 0 else 0
             avg_duration = np.mean(results[approach]['durations'])
             std_duration = np.std(results[approach]['durations'])
-            print(f"\n{approach.upper()} Accuracy: {accuracy:.2f}% ({results[approach]['correct']}/{results[approach]['total']}), Avg Time: {avg_duration:.4f}s (±{std_duration:.4f}s)")
+            avg_memory = np.mean(results[approach]['memory_used'])
+            std_memory = np.std(results[approach]['memory_used'])
+            print(f"\n{approach.upper()} Accuracy: {accuracy:.2f}% ({results[approach]['correct']}/{results[approach]['total']}), Avg Time: {avg_duration:.4f}s (±{std_duration:.4f}s), Avg Memory: {avg_memory:.2f}KB (±{std_memory:.2f}KB)")
 
             # Confusion Matrix
             if results[approach]['y_true']:
@@ -244,9 +259,9 @@ def process_UIA(uia_root='./UIA/', display_inline=False, results_folder='./resul
 
     if verbose:
         print("\nORB_BF Approach:")
-    result_orb, count_orb, match_img_orb, duration_orb = match_orb_bf(img1_path, img2_path, is_fingerprint=False, display_inline=display_inline, verbose=verbose)
-    uia_results['orb_bf'] = {'result': result_orb, 'count': count_orb, 'duration': duration_orb}
-    print(f"ORB_BF (UIA): Time: {duration_orb:.4f}s")
+    result_orb, count_orb, match_img_orb, duration_orb, memory_orb = match_orb_bf(img1_path, img2_path, is_fingerprint=False, display_inline=display_inline, verbose=verbose)
+    uia_results['orb_bf'] = {'result': result_orb, 'count': count_orb, 'duration': duration_orb, 'memory_used': memory_orb}
+    print(f"ORB_BF (UIA): Time: {duration_orb:.4f}s, Memory: {memory_orb:.2f}KB")
     if match_img_orb is not None:
         result_str = "match" if result_orb == "Match" else "no_match"
         match_img_filename = f"UIA_orb_bf_{result_str}.png"
@@ -257,9 +272,9 @@ def process_UIA(uia_root='./UIA/', display_inline=False, results_folder='./resul
     
     if verbose:
         print("\nSIFT_FLANN Approach:")
-    result_sift, count_sift, match_img_sift, duration_sift = match_sift_flann(img1_path, img2_path, is_fingerprint=False, display_inline=display_inline, verbose=verbose)
-    uia_results['sift_flann'] = {'result': result_sift, 'count': count_sift, 'duration': duration_sift}
-    print(f"SIFT_FLANN (UIA): Time: {duration_sift:.4f}s")
+    result_sift, count_sift, match_img_sift, duration_sift, memory_sift = match_sift_flann(img1_path, img2_path, is_fingerprint=False, display_inline=display_inline, verbose=verbose)
+    uia_results['sift_flann'] = {'result': result_sift, 'count': count_sift, 'duration': duration_sift, 'memory_used': memory_sift}
+    print(f"SIFT_FLANN (UIA): Time: {duration_sift:.4f}s, Memory: {memory_sift:.2f}KB")
     if match_img_sift is not None:
         result_str = "match" if result_sift == "Match" else "no_match"
         match_img_filename = f"UIA_sift_flann_{result_str}.png"
@@ -282,12 +297,14 @@ def generate_markdown_report(results_folder, dataset_results, uia_results, appro
                 accuracy = (dataset_results[approach]['correct'] / dataset_results[approach]['total']) * 100
                 avg_duration = np.mean(dataset_results[approach]['durations'])
                 std_duration = np.std(dataset_results[approach]['durations'])
+                avg_memory = np.mean(dataset_results[approach]['memory_used'])
                 f.write(f"- **Data_Check Accuracy**: {accuracy:.2f}% ({dataset_results[approach]['correct']}/{dataset_results[approach]['total']})\n")
-                f.write(f"- **Data_Check Avg Time**: {avg_duration:.4f}s (±{std_duration:.4f}s)\n\n")
+                f.write(f"- **Data_Check Avg Time**: {avg_duration:.4f}s (\±{std_duration:.4f}s)\n")
+                f.write(f"- **Data_Check Avg Memory**: {avg_memory:.2f}KB\n\n")
                 f.write("### Confusion Matrix (Data_Check)\n")
-                f.write(f"![Confusion Matrix {approach.upper()}](confusion_matrix_{approach}.png)\n\n")
+                f.write(f"![Confusion Matrix {approach.upper()}](results/confusion_matrix_{approach}.png)\n\n")
                 f.write("### Match Counts Plot (Data_Check)\n")
-                f.write(f"![Match Counts {approach.upper()}](match_counts_{approach}.png)\n\n")
+                f.write(f"![Match Counts {approach.upper()}](results/match_counts_{approach}.png)\n\n")
                 f.write("### Per-Pair Results (Data_Check)\n")
                 f.write("| Folder | Expected | Predicted | Good Matches | Visualization |\n")
                 f.write("|--------|----------|-----------|--------------|---------------|\n")
@@ -304,14 +321,15 @@ def generate_markdown_report(results_folder, dataset_results, uia_results, appro
                 f.write(f"- **Predicted**: {res['result']}\n")
                 f.write(f"- **Good Matches**: {res['count']}\n")
                 f.write(f"- **Time**: {res['duration']:.4f}s\n")
+                f.write(f"- **Memory**: {res['memory_used']:.2f}KB\n")
                 img_file = f"UIA_{approach}_{'match' if res['result'] == 'Match' else 'no_match'}.png"
-                f.write(f"![UiA Match]({img_file})\n\n")
+                f.write(f"![UiA Match](results/{img_file})\n\n")
 
     print(f"Generated Markdown report at: {report_path}")
 
 
 if __name__ == "__main__":
     results_folder = './results/'
-    dataset_results = process_dataset(display_inline=False, results_folder=results_folder, verbose=False) # display_inline=True for per image pop ups, verbose=True for debug prints
+    dataset_results = process_dataset(display_inline=False, results_folder=results_folder, verbose=True) # display_inline=True for per image pop ups, verbose=True for debug prints
     uia_results = process_UIA(display_inline=False, results_folder=results_folder, verbose=False)
     generate_markdown_report(results_folder, dataset_results, uia_results) # Write once in code, templatable

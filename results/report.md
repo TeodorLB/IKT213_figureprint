@@ -5,13 +5,14 @@
 ## ORB_BF Approach
 
 - **Data_Check Accuracy**: 80.00% (16/20)
-- **Data_Check Avg Time**: 0.0168s (±0.0326s)
+- **Data_Check Avg Time**: 0.0159s (\±0.0277s)
+- **Data_Check Avg Memory**: 4380.20KB
 
 ### Confusion Matrix (Data_Check)
-![Confusion Matrix ORB_BF](confusion_matrix_orb_bf.png)
+![Confusion Matrix ORB_BF](results/confusion_matrix_orb_bf.png)
 
 ### Match Counts Plot (Data_Check)
-![Match Counts ORB_BF](match_counts_orb_bf.png)
+![Match Counts ORB_BF](results/match_counts_orb_bf.png)
 
 ### Per-Pair Results (Data_Check)
 | Folder | Expected | Predicted | Good Matches | Visualization |
@@ -40,19 +41,21 @@
 ### UiA Images Results
 - **Predicted**: No Match
 - **Good Matches**: 1
-- **Time**: 0.0249s
-![UiA Match](UIA_orb_bf_no_match.png)
+- **Time**: 0.0235s
+- **Memory**: 468.00KB
+![UiA Match](results/UIA_orb_bf_no_match.png)
 
 ## SIFT_FLANN Approach
 
 - **Data_Check Accuracy**: 85.00% (17/20)
-- **Data_Check Avg Time**: 0.0605s (±0.0018s)
+- **Data_Check Avg Time**: 0.0601s (\±0.0025s)
+- **Data_Check Avg Memory**: 3032.60KB
 
 ### Confusion Matrix (Data_Check)
-![Confusion Matrix SIFT_FLANN](confusion_matrix_sift_flann.png)
+![Confusion Matrix SIFT_FLANN](results/confusion_matrix_sift_flann.png)
 
 ### Match Counts Plot (Data_Check)
-![Match Counts SIFT_FLANN](match_counts_sift_flann.png)
+![Match Counts SIFT_FLANN](results/match_counts_sift_flann.png)
 
 ### Per-Pair Results (Data_Check)
 | Folder | Expected | Predicted | Good Matches | Visualization |
@@ -81,6 +84,7 @@
 ### UiA Images Results
 - **Predicted**: No Match
 - **Good Matches**: 13
-- **Time**: 0.2477s
-![UiA Match](UIA_sift_flann_no_match.png)
+- **Time**: 0.2481s
+- **Memory**: 4228.00KB
+![UiA Match](results/UIA_sift_flann_no_match.png)
 
